@@ -6,6 +6,7 @@ import { TodoTypes } from '../../PropTypes/todo.proptype'
 
 import styles from './taskInput.module.scss'
 import connect, { ExtraInfoType } from '../../HOC/connect';
+import Title from '../Title'
 
 
 // gõ nhanh h1.{styles.title}
@@ -24,7 +25,7 @@ function TaskInput(props: TaskInputProps) {
 
   const [name, setName] = useState<string>('');
 
-  log(debug);
+  //log(debug);
 
   const onChangeInputName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
@@ -33,6 +34,10 @@ function TaskInput(props: TaskInputProps) {
     } else {
       setName(value)
     }
+  }
+
+  const address = {
+    street: '10 Trần Hưng Đạo'
   }
 
 
@@ -54,7 +59,7 @@ function TaskInput(props: TaskInputProps) {
 
   return (
     <div className='mb-2'>
-      <h1 className={styles.title}>To do list typescript</h1>
+      <Title address={address}/>
       <form className={styles.form} onSubmit={handleSubmit}>
         <input type='text' placeholder='caption goes here' value={currentTodo ? currentTodo.name : name}
           onChange={onChangeInputName} />

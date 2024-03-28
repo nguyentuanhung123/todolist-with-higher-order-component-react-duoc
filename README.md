@@ -1,46 +1,51 @@
-# Getting Started with Create React App
+# Những nguyên nhân làm cho Component re-render
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- setState trong Component của chúng ta
+- Thay đổi props
+- Component cha re-render làm cho Component con cũng re-render
 
-## Available Scripts
+# React.memo
 
-In the project directory, you can run:
+Chúng ta dùng React.memo khi không muốn component bị re-render mỗi khi component cha re-render
 
-### `npm start`
+> Các tác nhân làm component re-render: cập nhật state, cập nhật prop, component cha re-render
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+React.memo là một HOC, vậy nên chỉ cần bao bọc component là được
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```jsx
+const newComponent = React.memo(Component)
+```
 
-### `npm test`
+React.memo chỉ tác động đến prop, không ảnh hưởng đến state
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Cơ chế memo là cơ chế dùng bộ nhớ (RAM) để lưu trữ, vì thế khi dùng những thứ liên quan đến memo nghĩa là chúng ta đang đánh đổi giữa tốn nhiều bộ nhớ hơn để tăng tốc performance.
 
-### `npm run build`
+Vậy nên đừng lạm dụng quá nhé!
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# useMemo
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Chúng ta dùng `useMemo` khi chúng ta muốn một biến không bị làm mới lại mỗi lần component re-render
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```jsx
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b])
+```
 
-### `npm run eject`
+`useMemo` nhận vào các depedency để quyết định có chạy callback hay không tương tự như bên `useEffect`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# useCallback
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Chúng ta dùng `useCallback` khi chúng ta không muốn function của chúng ta được khởi tạo lại mỗi lần component chúng ta re-render
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```jsx
+const memoizedCallback = useCallback(() => {
+  doSomething(a, b)
+}, [a, b])
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Cách sử dụng tương tự như `useMemo`, ngoài ra thì chúng ta cũng có thể dùng `useMemo` thay thế cho `useCallback` cũng được
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```jsx
+const memoizedCallback = useMemo(() => {
+  return () => doSomething(a, b)
+}, [a, b])
+```
